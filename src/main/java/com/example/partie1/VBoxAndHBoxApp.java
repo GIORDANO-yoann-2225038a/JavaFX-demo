@@ -6,10 +6,7 @@ import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
@@ -21,96 +18,81 @@ public class VBoxAndHBoxApp extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        BorderPane root = new BorderPane();
+
+        MenuBar menuBar = new MenuBar();
 
         // Création du conteneur principal
         VBox vbox = new VBox();
 
-        // Création du conteneur correspondant à la ligne de contrôle haut dessus du tableau
-        HBox topControls = new HBox();
-        topControls.setAlignment( Pos.BOTTOM_LEFT );
-        Button btnRefresh = new Button("Refresh");
+       // create File menu
+        Menu fileMenu = new Menu("File");
+        MenuItem newItem = new MenuItem("New");
+        MenuItem openItem = new MenuItem("Open");
+        MenuItem saveItem = new MenuItem("Save");
+        MenuItem exitItem = new MenuItem("Exit");
+        fileMenu.getItems().addAll(newItem, openItem, saveItem, exitItem);
 
-        HBox topRightControls = new HBox();
-        HBox.setHgrow(topRightControls, Priority.ALWAYS );
-        topRightControls.setAlignment( Pos.BOTTOM_RIGHT );
-        Hyperlink signOutLink = new Hyperlink("Sign Out");
-        topRightControls.getChildren().add( signOutLink );
+        Menu editMenu = new Menu("Edit");
+        MenuItem cutItem = new MenuItem("Cut");
+        MenuItem copyItem = new MenuItem("Copy");
+        MenuItem pasteItem = new MenuItem("Paste");
+        editMenu.getItems().addAll(cutItem, copyItem, pasteItem);
 
-        topControls.getChildren().addAll( btnRefresh, topRightControls );
+        // ajoute un menu dans la bar de menu
+        menuBar.getMenus().addAll(fileMenu, editMenu, new Menu("Help"));
 
+        // ajoute une bar de menu
+        root.setTop(menuBar);
 
-        // Création du tableau avec les deux colonnes
-        TableView<Object> tblCustomers = new TableView<>();
-        tblCustomers.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        TableColumn<Object, String> lastNameCol = new TableColumn<>("Last Name");
-        TableColumn<Object, String> firstNameCol = new TableColumn<>("First Name");
-        tblCustomers.getColumns().addAll( lastNameCol, firstNameCol );
-        VBox.setVgrow( tblCustomers, Priority.ALWAYS );
+        // create left section with buttons
+        VBox leftBox = new VBox();
+        leftBox.setAlignment(Pos.CENTER);
+        leftBox.setSpacing(10);
 
+        Label buttonLabel = new Label("Boutons :");
 
+        Button button1 = new Button("Bouton 1");
+        Button button2 = new Button("Bouton 2");
+        Button button3 = new Button("Bouton 3");
+        leftBox.getChildren().addAll(buttonLabel,button1, button2, button3);
 
+        // add separator between left section and center section
+        root.setLeft(new HBox(leftBox, new Separator(Orientation.VERTICAL)));
 
-        GridPane gridpane = new GridPane();
+        // create center section with form
+        GridPane grilleFormulaire = new GridPane();
+        grilleFormulaire.setAlignment(Pos.CENTER);
+        grilleFormulaire.setHgap(10);
+        grilleFormulaire.setVgap(10);
+        grilleFormulaire.setPadding(new Insets(10));
 
-        // Set one constraint at a time...
-        // Places the button at the first row and second column
-        Button button = new Button();
-        GridPane.setRowIndex(button, 0);
-        GridPane.setColumnIndex(button, 1);
+        grilleFormulaire.addRow(0, new Label("Name:"), new TextField());
+        grilleFormulaire.addRow(1, new Label("Email:"), new TextField());
+        grilleFormulaire.addRow(2, new Label("Password:"), new TextField());
 
-        // or convenience methods set more than one constraint at once...
-        Label label = new Label();
-        GridPane.setConstraints(label, 2, 0); // column=2 row=0
+        HBox buttonBox = new HBox();
+        buttonBox.setAlignment(Pos.CENTER);
+        buttonBox.setSpacing(10);
 
-        // don't forget to add children to gridpane
-        gridpane.getChildren().addAll(button, label);
+        buttonBox.getChildren().addAll(new Button("Submit"), new Button("Cancel"));
 
+        grilleFormulaire.add(buttonBox, 0, 3, 2, 1);
 
+        root.setCenter(grilleFormulaire);
 
-
-
-
-
-
-
-
-        Separator sepMid = new Separator(Orientation.VERTICAL);
-
-
-        // Création de la ligne de séparation
-        Separator sep = new Separator();
-
-        // Création du bandeau en bas de la fenêtre
-        HBox bottomControls = new HBox();
-        bottomControls.setAlignment(Pos.BOTTOM_RIGHT );
-        Button btnClose = new Button("Close");
-        bottomControls.getChildren().add( btnClose );
-
-        // Ajout des contrôleurs au conteneur principal
-        vbox.getChildren().addAll(
-                topControls,
-                tblCustomers,
-                sep,
-                bottomControls
-        );
-
-        // Ajout du conteneur à la scene
-        Scene scene = new Scene(vbox );
-
-        // Ajout de la scene à la fenêtre et changement de ses paramètres (dimensions et titre)
-        primaryStage.setScene( scene );
-        primaryStage.setWidth( 800 );
-        primaryStage.setHeight( 600 );
-        primaryStage.setTitle("VBox and HBox App");
+        // créer un bouton
+        Label statusLabel = new Label("Ceci est un label de bas de page");
+        VBox bas = new VBox(new Separator(Orientation.HORIZONTAL),statusLabel);
+        bas.setAlignment(Pos.CENTER);
+        root.setBottom(bas);
 
 
-
-         // Affichage de la fenêtre
+        // afficher la scene
+        Scene scene = new Scene(root, 600, 400);
+        primaryStage.setScene(scene);
+        primaryStage.setTitle("Premier exemple manipulant les conteneurs");
         primaryStage.show();
-
-        VBox.setMargin( topControls, new Insets(10.0d) );
-        VBox.setMargin( tblCustomers, new Insets(0.0d, 10.0d, 10.0d, 10.0d) );
-        VBox.setMargin( bottomControls, new Insets(10.0d) );
     }
 
     public static void main(String[] args) {
