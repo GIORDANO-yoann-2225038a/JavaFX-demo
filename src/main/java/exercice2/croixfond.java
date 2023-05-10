@@ -11,6 +11,7 @@ import javafx.stage.Stage;
 import java.util.ArrayList;
 import java.util.Random;
 
+
 public class croixfond extends Application {
     @Override
     public void start(Stage primaryStage) {
